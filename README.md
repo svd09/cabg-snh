@@ -1,2 +1,2 @@
-# cabg-snh
-This the repo for the CABG-SNH paper
+# Coronary artery bypass grafting at SNH
+This the repo for the CABG-SNH paper. The abstract is accepted for oral presentation at AVAS 2020 and will be published in JAMA Surgery. This the repo for the code used in the preparation of the manuscript. The code is available for download to researchers. Data used is the NIS data from AHRQ. While public, the data is available only after DUA submitted to AHRQ. Hence, I cannot share data with researchers, even on request
