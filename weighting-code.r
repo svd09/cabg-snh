@@ -333,6 +333,8 @@ dfum3$ps = w.ate$ps
 
 dfum3$weights = w.ate$weights
 
+write_csv(dfum3, "dfum3.csv")
+
 svyd = svydesign(data = dfum3, ids = ~hosp_nis, 
                 weights = ~discwt+weights, strata = ~nis_stratum,
                 nest = T)
