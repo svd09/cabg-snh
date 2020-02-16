@@ -1,0 +1,80 @@
+---
+title: "dr_bakaeen_input"
+author: "Salil V Deo"
+date: "December 14, 2019"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This document is using the input from Dr Bakaeen regarding the SNH/CAD paper.
+
+```{r}
+library(MASS);library(survival);library(tidyverse);library(tidylog);
+library(survey);library(srvyr);library(maptools);
+library(desctable);library(haven)
+```
+
+# get the data and do the analysis suggested by Dr Bakaeen.
+# data is in stata, so will get with haven.
+
+```{r}
+
+
+df = read_stata("D:/snh_cad/data/datatable_stata.dta")
+
+glimpse(df)
+
+
+
+# region and safety net surgery
+
+# create survey object
+
+cabg = df %>% dplyr::filter(cabg == 1) # only cabg patients
+
+write_csv(cabg, "D:/snh_cad/SNH_CAbG/cabg_data.csv")
+
+sur = svydesign(data = cabg, ids = ~hosp_nis, strata = ~nis_stratum, nest = T, weights = ~discwt)
+
+svytable(~snh, design = sur)
+
+svytable(~hosp_locteach, design = sur)
+
+```
+
+
+
+```{r}
+
+# region and snh
+
+region = prop.table(svytable(~ hosp_region + snh, sur),1)
+
+# hospitals by region
+
+hosp_snh = cabg %>% filter(snh == 2) %>%
+  group_by(hosp_region) %>% summarise(n_distinct(hosp_nis))
+
+hosp_nonsnh = cabg %>% filter(snh == 1) %>%
+  group_by(hosp_region) %>% summarise(n_distinct(hosp_nis))
+
+
+
+# create map for SNH hospitals per region in the US
+
+library(maps)
+library(maptools)
+library(ggmap)
+
+usa = map_data("usa")
+
+ggplot() + geom_polygon(data = usa, aes(x = long, y = lat, group = group)) + coord_fixed(1.3)
+  
+
+```
+
